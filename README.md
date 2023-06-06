@@ -1,6 +1,12 @@
 # Discord Bot
 Discord bot build in c++ as practice.
 
+## Dependencies
+This application requires the following dependencies:
+- [D++](https://dpp.dev/)
+- Make
+- C++23 (17+ is probably fine)
+
 ## Install
 1. Clone this repo with `git clone https://github.com/trainzkid/discordBot.git`
 2. Cd into the repo with `cd discordBot`
