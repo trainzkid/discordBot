@@ -19,9 +19,13 @@ int main() {
 	if(!file.is_open()) {
 		std::cerr<<"Couldn't open bot token file!"<<std::endl;
 		return 1;
-	} else
-		if(!(file>>BOT_TOKEN))
+	} else {
+		if(!(file>>BOT_TOKEN)) {
+			std::cerr<<"Token couldn't be retreived from file!"<<std::endl;
 			return 1;
+		}
+	}
+
 	dpp::cluster bot(BOT_TOKEN);
 
 	bot.on_log(dpp::utility::cout_logger());
