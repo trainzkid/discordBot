@@ -12,21 +12,23 @@ void ping(const dpp::slashcommand_t& event) {
 	}
 }
 
-int main() {
-	// retreive discord bot token from file
+std::string getBotToken() {
 	std::ifstream file{"bot_token"};
 	std::string BOT_TOKEN; 
 	if(!file.is_open()) {
 		std::cerr<<"Couldn't open bot token file!"<<std::endl;
-		return 1;
+		throw;
 	} else {
 		if(!(file>>BOT_TOKEN)) {
 			std::cerr<<"Token couldn't be retreived from file!"<<std::endl;
-			return 1;
+			throw;
 		}
+		return BOT_TOKEN;
 	}
+}
 
-	dpp::cluster bot(BOT_TOKEN);
+int main() {
+	dpp::cluster bot(getBotToken());
 
 	bot.on_log(dpp::utility::cout_logger());
 
