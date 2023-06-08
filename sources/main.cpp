@@ -12,6 +12,20 @@ void ping(const dpp::slashcommand_t& event) {
 	}
 }
 
+class Bot : public dpp::cluster {
+	public:
+		void registerPing(const dpp::ready_t& event) {
+			if(dpp::run_once<struct register_bot_commands>()) {
+				this->global_command_create(dpp::slashcommand("ping","Test server status",this->me.id));
+			}
+		};
+		Bot(std::string token) : dpp::cluster(token) {
+			this->on_log(dpp::utility::cout_logger());
+			this->on_slashcommand(ping);
+			this->on_ready(Bot::registerPing);
+		};
+};
+
 int main() {
 	// retreive discord bot token from file
 	std::ifstream file{"bot_token"};
@@ -26,12 +40,13 @@ int main() {
 		}
 	}
 
-	dpp::cluster bot(BOT_TOKEN);
+	Bot bot(BOT_TOKEN);
 
-	bot.on_log(dpp::utility::cout_logger());
+	//bot.on_log(dpp::utility::cout_logger());
 
-	bot.on_slashcommand(ping);
+	//bot.on_slashcommand(ping);
 
+	/*
 	auto registerPing = [&bot](const dpp::ready_t& event){
 		if(dpp::run_once<struct register_bot_commands>()) {
 			bot.global_command_create(
@@ -39,8 +54,9 @@ int main() {
 			);
 		}
 	};
+	*/
 
-	bot.on_ready(registerPing);
+	//bot.on_ready(registerPing);
 
 	bot.start(dpp::st_wait);
 
