@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <exception>
 
 void ping(const dpp::slashcommand_t& event) {
 	if(event.command.get_command_name() == "ping") {
@@ -15,23 +16,17 @@ void ping(const dpp::slashcommand_t& event) {
 std::string getBotToken() {
 	std::ifstream file{"bot_token"};
 	std::string BOT_TOKEN; 
-	if(!file.is_open()) {
-		std::cerr<<"Couldn't open bot token file!"<<std::endl;
-		throw;
-	} else {
-		if(!(file>>BOT_TOKEN)) {
-			std::cerr<<"Token couldn't be retreived from file!"<<std::endl;
-			throw;
-		}
-		return BOT_TOKEN;
-	}
+	if(!file.is_open()) 
+		throw std::runtime_error("Failed to open bot token file!");
+	else
+		if(!(file>>BOT_TOKEN))
+			throw std::runtime_error("Token couldn't be retrieved from file!");
+	return BOT_TOKEN;
 }
 
 int main() {
 	dpp::cluster bot(getBotToken());
-
 	bot.on_log(dpp::utility::cout_logger());
-
 	bot.on_slashcommand(ping);
 
 	auto registerPing = [&bot](const dpp::ready_t& event){
@@ -43,7 +38,6 @@ int main() {
 	};
 
 	bot.on_ready(registerPing);
-
 	bot.start(dpp::st_wait);
 
 	return 0;
